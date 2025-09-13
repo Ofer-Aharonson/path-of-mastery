@@ -1,0 +1,97 @@
+# Path of Mastery Addon - Git Ignore File
+# Excludes files that should not be tracked in version control
+
+# Development Environment
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating System Files
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# Temporary Files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+*.rej
+*.old
+
+# Log Files
+*.log
+logs/
+*.debug
+
+# Compiled Lua Bytecode
+*.luac
+*.out
+
+# WoW Addon Specific
+# Saved Variables (contains user data)
+SavedVariables/
+Account/
+Character/
+Server/
+
+# Addon Cache
+Cache/
+WTF/
+
+# Backup Files
+*.zip
+*.rar
+*.7z
+*.tar.gz
+
+# Development Notes
+TODO.txt
+notes.txt
+*.md~
+*.txt~
+
+# Build Artifacts
+build/
+dist/
+*.exe
+
+# Personal Configuration
+config.local.lua
+settings.local.lua
+
+# Test Files
+test_*.lua
+*_test.lua
+
+# Documentation Drafts
+docs/drafts/
+*.draft
