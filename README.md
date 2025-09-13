@@ -270,5 +270,4 @@ If you find this addon helpful, consider:
 
 ---
 
-**Happy adventuring in Azeroth!** 🏆⚔️</content>
-<parameter name="filePath">c:\Program Files (x86)\World of Warcraft\_retail_\Interface\AddOns\Path of Mastery\README.md
+**Happy adventuring in Azeroth!** 🏆⚔️
