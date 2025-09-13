@@ -64,16 +64,36 @@ function PathOfMastery:OnEnable()
     -- Register slash commands
     self:RegisterChatCommand("pom", "HandleSlashCommand")
     self:RegisterChatCommand("pathofmastery", "HandleSlashCommand")
+    self:Print("Slash commands registered: /pom and /pathofmastery")
 end
 
 -- Slash command handler
 function PathOfMastery:HandleSlashCommand(msg)
-    if PathOfMastery.Core and PathOfMastery.Core.HandleSlashCommand then
+    self:Print("Slash command received: " .. tostring(msg))
+
+    -- Ensure Core module is loaded
+    if not PathOfMastery.Core then
+        self:Print("Error: Core module not available")
+        return
+    end
+
+    -- Delegate to Core module's slash command handler
+    if PathOfMastery.Core.HandleSlashCommand then
+        self:Print("Delegating to Core module...")
         PathOfMastery.Core:HandleSlashCommand(msg)
     else
-        self:Print("Core module not available for slash commands")
+        self:Print("Error: Core slash command handler not available")
+        self:Print("Available functions in Core:")
+        for k, v in pairs(PathOfMastery.Core) do
+            if type(v) == "function" then
+                self:Print("  " .. k)
+            end
+        end
     end
 end
 
 -- Make addon globally available
 _G.PathOfMastery = PathOfMastery
+
+-- Debug: Confirm main addon file loaded
+print("[Path of Mastery] Main addon file loaded successfully")
