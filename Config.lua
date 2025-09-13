@@ -208,15 +208,58 @@ local options = {
 -- Register options table
 AceConfig:RegisterOptionsTable("PathOfMastery", options)
 
+-- Add profile management options
+local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(PathOfMastery.db)
+AceConfig:RegisterOptionsTable("PathOfMastery_Profiles", profiles)
+
 -- Open options panel
 function PathOfMastery.Config:OpenOptionsPanel()
     -- Create the options frame if it doesn't exist
     if not self.optionsFrame then
         self.optionsFrame = AceConfigDialog:AddToBlizOptions("PathOfMastery", "Path of Mastery")
+        self.profilesFrame = AceConfigDialog:AddToBlizOptions("PathOfMastery_Profiles", "Profiles", "Path of Mastery")
     end
 
     -- Show the options frame
-    InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
+    if InterfaceOptionsFrame:IsShown() then
+        InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
+    else
+        InterfaceOptionsFrame:Show()
+        InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
+    end
+end
+
+-- Initialize Blizzard Interface Options integration
+function PathOfMastery.Config:InitializeBlizOptions()
+    -- Try modern Settings API first (WoW 10.0+)
+    if Settings and Settings.RegisterCanvasLayoutCategory then
+        local category = Settings.RegisterCanvasLayoutCategory(self:CreateBlizOptionsFrame(), "Path of Mastery")
+        category.ID = "PathOfMastery"
+        Settings.RegisterAddOnCategory(category)
+        self.blizCategory = category
+    else
+        -- Fallback to legacy Interface Options
+        self:InitializeLegacyOptions()
+    end
+end
+
+-- Create Blizzard options frame
+function PathOfMastery.Config:CreateBlizOptionsFrame()
+    local frame = AceConfigDialog:AddToBlizOptions("PathOfMastery", "Path of Mastery")
+    return frame
+end
+
+-- Alternative method for older WoW versions
+function PathOfMastery.Config:InitializeLegacyOptions()
+    -- Create the options frame if it doesn't exist
+    if not self.optionsFrame then
+        self.optionsFrame = AceConfigDialog:AddToBlizOptions("PathOfMastery", "Path of Mastery")
+    end
+
+    -- Add to Blizzard's AddOns category
+    if InterfaceOptions_AddCategory then
+        InterfaceOptions_AddCategory(self.optionsFrame)
+    end
 end
 
 -- Get setting value

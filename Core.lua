@@ -45,6 +45,11 @@ function PathOfMastery:OnInitialize()
         PathOfMastery.UI:Initialize()
     end
 
+    -- Initialize Blizzard Interface Options
+    if PathOfMastery.Config then
+        PathOfMastery.Config:InitializeBlizOptions()
+    end
+
     self:Print("Path of Mastery initialization complete!")
 end
 
@@ -196,7 +201,13 @@ function PathOfMastery:HandleSlashCommand(msg)
     elseif msg == "resetdialog" then
         self:ResetStartupDialog()
     else
-        self:Print("Commands: /pom show | hide | reset | config | startup | resetdialog")
+        self:Print("Path of Mastery Commands:")
+        self:Print("  /pom show - Open main guide window")
+        self:Print("  /pom hide - Hide main guide window")
+        self:Print("  /pom config - Open settings (or use ESC -> Interface -> AddOns)")
+        self:Print("  /pom startup - Show experience level dialog")
+        self:Print("  /pom resetdialog - Reset startup dialog")
+        self:Print("  /pom reset - Reset all settings to defaults")
     end
 end
 
