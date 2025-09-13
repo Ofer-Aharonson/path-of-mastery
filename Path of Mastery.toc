@@ -1,0 +1,31 @@
+## Interface: 110005
+## Title: Path of Mastery
+## Notes: Advanced new player guide for World of Warcraft
+## Author: GitHub Copilot
+## Version: 1.0.0
+## IconTexture: Interface\Icons\INV_Misc_Book_09
+## SavedVariables: PathOfMasteryDB
+## OptionalDeps: Ace3
+
+locales\enUS.lua
+locales\deDE.lua
+locales\esES.lua
+locales\frFR.lua
+locales\koKR.lua
+locales\ruRU.lua
+locales\zhCN.lua
+locales\zhTW.lua
+
+Libs\LibStub\LibStub.lua
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+
+Core.lua
+Data.lua
+UI.lua
+Config.lua
