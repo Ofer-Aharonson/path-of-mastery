@@ -101,11 +101,16 @@ end
 
 -- Show startup dialog for experience level selection
 function PathOfMastery.UI:ShowStartupDialog()
+    PathOfMastery:Print("ShowStartupDialog called")
+
     -- Don't show if dialog already exists
     if self.startupDialog then
+        PathOfMastery:Print("Showing existing startup dialog")
         self.startupDialog:Show()
         return
     end
+
+    PathOfMastery:Print("Creating new startup dialog")
 
     -- Create the startup dialog frame
     local dialog = CreateFrame("Frame", "PathOfMasteryStartupDialog", UIParent, "BasicFrameTemplateWithInset")

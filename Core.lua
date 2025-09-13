@@ -108,14 +108,24 @@ end
 
 -- Check if we need to show the startup dialog
 function PathOfMastery:CheckStartupDialog()
+    self:Print("Checking startup dialog conditions...")
+    self:Print("  startupDialogShown: " .. tostring(self.db.profile.startupDialogShown))
+    self:Print("  experienceLevel: " .. tostring(self.db.profile.experienceLevel))
+
     -- Only show dialog if it hasn't been shown before and we don't have an experience level set
     if not self.db.profile.startupDialogShown and not self.db.profile.experienceLevel then
+        self:Print("Conditions met - showing startup dialog in 2 seconds")
         -- Delay the dialog slightly to ensure UI is ready
         C_Timer.After(2, function()
             if PathOfMastery.UI then
+                self:Print("Calling ShowStartupDialog...")
                 PathOfMastery.UI:ShowStartupDialog()
+            else
+                self:Print("ERROR: UI module not available")
             end
         end)
+    else
+        self:Print("Startup dialog conditions not met - skipping")
     end
 end
 
@@ -203,6 +213,13 @@ function PathOfMastery:HandleSlashCommand(msg)
         end
     elseif msg == "resetdialog" then
         self:ResetStartupDialog()
+    elseif msg == "forcedialog" then
+        self:Print("Forcing startup dialog to show...")
+        if PathOfMastery.UI then
+            PathOfMastery.UI:ShowStartupDialog()
+        else
+            self:Print("ERROR: UI module not available")
+        end
     elseif msg == "debug" then
         self:Print("=== Path of Mastery Debug Info ===")
         self:Print("Version: " .. (self.version or "Unknown"))
@@ -226,6 +243,7 @@ function PathOfMastery:HandleSlashCommand(msg)
         self:Print("  /pom config - Open settings (or use ESC -> Interface -> AddOns)")
         self:Print("  /pom startup - Show experience level dialog")
         self:Print("  /pom resetdialog - Reset startup dialog")
+        self:Print("  /pom forcedialog - Force show startup dialog (ignore conditions)")
         self:Print("  /pom debug - Show debug information")
         self:Print("  /pom reset - Reset all settings to defaults")
     end
