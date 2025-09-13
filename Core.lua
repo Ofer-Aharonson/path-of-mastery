@@ -45,9 +45,12 @@ function PathOfMastery:OnInitialize()
         PathOfMastery.UI:Initialize()
     end
 
-    -- Initialize Blizzard Interface Options
+    -- Initialize Blizzard Interface Options (delay until UI is ready)
     if PathOfMastery.Config then
-        PathOfMastery.Config:InitializeBlizOptions()
+        -- Delay initialization to ensure UI is fully loaded
+        C_Timer.After(1, function()
+            PathOfMastery.Config:InitializeBlizOptions()
+        end)
     end
 
     self:Print("Path of Mastery initialization complete!")
@@ -200,6 +203,22 @@ function PathOfMastery:HandleSlashCommand(msg)
         end
     elseif msg == "resetdialog" then
         self:ResetStartupDialog()
+    elseif msg == "debug" then
+        self:Print("=== Path of Mastery Debug Info ===")
+        self:Print("Version: " .. (self.version or "Unknown"))
+        self:Print("Enabled: " .. (self.db and self.db.profile.enabled and "Yes" or "No"))
+        self:Print("Experience Level: " .. (self:GetExperienceLevel() or "Not set"))
+        if PathOfMastery.Config then
+            self:Print("Config Module: Loaded")
+            self:Print("Bliz Options Category: " .. (PathOfMastery.Config.blizCategory and "Registered" or "Not registered"))
+        else
+            self:Print("Config Module: Not loaded")
+        end
+        if PathOfMastery.UI then
+            self:Print("UI Module: Loaded")
+        else
+            self:Print("UI Module: Not loaded")
+        end
     else
         self:Print("Path of Mastery Commands:")
         self:Print("  /pom show - Open main guide window")
@@ -207,6 +226,7 @@ function PathOfMastery:HandleSlashCommand(msg)
         self:Print("  /pom config - Open settings (or use ESC -> Interface -> AddOns)")
         self:Print("  /pom startup - Show experience level dialog")
         self:Print("  /pom resetdialog - Reset startup dialog")
+        self:Print("  /pom debug - Show debug information")
         self:Print("  /pom reset - Reset all settings to defaults")
     end
 end

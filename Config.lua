@@ -214,33 +214,71 @@ AceConfig:RegisterOptionsTable("PathOfMastery_Profiles", profiles)
 
 -- Open options panel
 function PathOfMastery.Config:OpenOptionsPanel()
-    -- Create the options frame if it doesn't exist
-    if not self.optionsFrame then
-        self.optionsFrame = AceConfigDialog:AddToBlizOptions("PathOfMastery", "Path of Mastery")
-        self.profilesFrame = AceConfigDialog:AddToBlizOptions("PathOfMastery_Profiles", "Profiles", "Path of Mastery")
-    end
-
-    -- Show the options frame
-    if InterfaceOptionsFrame:IsShown() then
-        InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
+    -- Try modern Settings API first (WoW 10.0+)
+    if Settings and self.blizCategory then
+        Settings.OpenToCategory(self.blizCategory.ID)
     else
-        InterfaceOptionsFrame:Show()
-        InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
+        -- Fallback to legacy Interface Options
+        if not self.optionsFrame then
+            self.optionsFrame = AceConfigDialog:AddToBlizOptions("PathOfMastery", "Path of Mastery")
+            self.profilesFrame = AceConfigDialog:AddToBlizOptions("PathOfMastery_Profiles", "Profiles", "Path of Mastery")
+        end
+
+        -- Show the options frame
+        if InterfaceOptionsFrame:IsShown() then
+            InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
+        else
+            InterfaceOptionsFrame:Show()
+            InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
+        end
     end
 end
 
 -- Initialize Blizzard Interface Options integration
 function PathOfMastery.Config:InitializeBlizOptions()
+    PathOfMastery:Print("Initializing Blizzard Interface Options...")
+
     -- Try modern Settings API first (WoW 10.0+)
     if Settings and Settings.RegisterCanvasLayoutCategory then
-        local category = Settings.RegisterCanvasLayoutCategory(self:CreateBlizOptionsFrame(), "Path of Mastery")
+        PathOfMastery:Print("Using modern Settings API")
+
+        -- Create the options frame using AceConfigDialog
+        local frame = AceConfigDialog:AddToBlizOptions("PathOfMastery", "Path of Mastery")
+        if not frame then
+            PathOfMastery:Print("ERROR: Failed to create options frame")
+            return
+        end
+
+        -- Register with modern Settings API
+        local category = Settings.RegisterCanvasLayoutCategory(frame, "Path of Mastery")
+        if not category then
+            PathOfMastery:Print("ERROR: Failed to register canvas layout category")
+            return
+        end
+
         category.ID = "PathOfMastery"
         Settings.RegisterAddOnCategory(category)
         self.blizCategory = category
+
+        PathOfMastery:Print("Successfully registered with modern Settings API")
+
+        -- Also register profiles
+        local profilesFrame = AceConfigDialog:AddToBlizOptions("PathOfMastery_Profiles", "Profiles", "Path of Mastery")
+        if profilesFrame then
+            local profilesCategory = Settings.RegisterCanvasLayoutCategory(profilesFrame, "Profiles", "Path of Mastery")
+            if profilesCategory then
+                profilesCategory.ID = "PathOfMastery_Profiles"
+                Settings.RegisterAddOnCategory(profilesCategory)
+                PathOfMastery:Print("Successfully registered profiles with modern Settings API")
+            end
+        end
     else
+        PathOfMastery:Print("Using legacy Interface Options")
         -- Fallback to legacy Interface Options
         self:InitializeLegacyOptions()
     end
+
+    PathOfMastery:Print("Blizzard Interface Options initialization complete")
 end
 
 -- Create Blizzard options frame
